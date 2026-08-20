@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidUserProfile(data) {
+      return data.userId == request.auth.uid &&
+             data.email is string &&
+             data.apiKey is string &&
+             data.role in ['admin', 'user'];
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId) && isValidUserProfile(request.resource.data);
+      allow delete: if false;
+
+      match /jobs/{jobId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /sessions/{sessionId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Text-to-Speech API Backend",
+  "description": "Backend de Text-to-Speech (TTS) com síntese neural Gemini 3.1 Flash, fatiamento automático por parágrafos para textos longos, nomenclatura incremental [nome_base]-[counter].[ext] e múltiplos formatos de áudio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

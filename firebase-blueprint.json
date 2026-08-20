@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile containing authentication metadata, role, and API token for programmatic access.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "apiKey": { "type": "string", "description": "Secret API Bearer token for authenticating curl/external clients." },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "email", "apiKey", "role", "createdAt"]
+    },
+    "SynthesisJob": {
+      "title": "SynthesisJob",
+      "description": "Log of audio synthesis operations performed by the user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "baseName": { "type": "string" },
+        "voice": { "type": "string" },
+        "language": { "type": "string" },
+        "format": { "type": "string" },
+        "speed": { "type": "number" },
+        "totalChunks": { "type": "number" },
+        "totalDurationEstimatedSec": { "type": "number" },
+        "textSnippet": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "baseName", "voice", "language", "format", "speed", "totalChunks", "createdAt"]
+    },
+    "AudioSession": {
+      "title": "AudioSession",
+      "description": "Audio session with UUID and memorable slug, linked to Google Drive storage.",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "slug": { "type": "string" },
+        "fullSessionId": { "type": "string" },
+        "folderName": { "type": "string" },
+        "driveFolderId": { "type": "string" },
+        "driveFolderUrl": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "baseName": { "type": "string" },
+        "voice": { "type": "string" },
+        "language": { "type": "string" },
+        "speed": { "type": "number" },
+        "format": { "type": "string" },
+        "text": { "type": "string" },
+        "totalCharacters": { "type": "number" },
+        "totalDurationSeconds": { "type": "number" },
+        "totalChunks": { "type": "number" },
+        "isSavedToDrive": { "type": "boolean" },
+        "userId": { "type": "string" }
+      },
+      "required": ["sessionId", "slug", "fullSessionId", "folderName", "createdAt", "baseName", "voice", "format", "userId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Stores user profile and access keys."
+    },
+    "/users/{userId}/jobs/{jobId}": {
+      "schema": "SynthesisJob",
+      "description": "Synthesis logs belonging to a specific user."
+    },
+    "/users/{userId}/sessions/{sessionId}": {
+      "schema": "AudioSession",
+      "description": "User audio sessions synced with Google Drive folders."
+    }
+  }
+}
